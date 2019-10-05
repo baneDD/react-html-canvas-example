@@ -1,0 +1,17 @@
+div {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+}
+
+#reactCanvas {
+  border: 1px solid #757575;
+  margin: 10px;
+}
+
+.btn,
+.list-group {
+  display: block;
+  width: 502px;
+  margin: 10px;
+}
