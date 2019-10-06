@@ -1,4 +1,4 @@
-div {
+.container {
   position: absolute;
   width: 100vw;
   height: 100vh;
@@ -7,6 +7,7 @@ div {
 #reactCanvas {
   border: 1px solid #757575;
   margin: 10px;
+  cursor: crosshair;
 }
 
 .btn,

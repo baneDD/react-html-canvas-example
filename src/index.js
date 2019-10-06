@@ -1,11 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Metrics from "./metrics";
 
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css";
 
 class App extends React.Component {
-  state = { X: 0, Y: 0, iX: 0, iY: 0, rX: 0, rY: 0, rW: 0, rH: 0 };
+  state = {
+    X: 0,
+    Y: 0,
+    iX: 0,
+    iY: 0,
+    rX: 0,
+    rY: 0,
+    rW: 0,
+    rH: 0,
+    mouseDown: false
+  };
 
   getMousePositionOnCanvas = event => {
     const rect = this.refs.canvas.getBoundingClientRect();
@@ -27,6 +38,10 @@ class App extends React.Component {
       rW: this.state.iX ? Math.abs(this.state.iX - pos.x) : 0,
       rH: this.state.iY ? Math.abs(this.state.iY - pos.y) : 0
     });
+
+    if (this.state.mouseDown) {
+      this.drawOutlineRectangle();
+    }
   };
 
   onMouseOut = event => {
@@ -43,21 +58,36 @@ class App extends React.Component {
       rX: 0,
       rY: 0,
       rW: 0,
-      rH: 0
+      rH: 0,
+      mouseDown: true
     });
   };
 
   endDraw = event => {
     if (this.state.iX && this.state.iY) {
+      this.setState({ mouseDown: false });
       this.drawRectangle();
     }
   };
 
   drawRectangle = () => {
     const context = this.refs.canvas.getContext("2d");
+    context.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
     context.beginPath();
     context.lineWidth = "4";
     context.strokeStyle = "blue";
+    context.setLineDash([]);
+    context.rect(this.state.rX, this.state.rY, this.state.rW, this.state.rH);
+    context.stroke();
+  };
+
+  drawOutlineRectangle = () => {
+    const context = this.refs.canvas.getContext("2d");
+    context.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
+    context.beginPath();
+    context.lineWidth = "1";
+    context.strokeStyle = "grey";
+    context.setLineDash([5, 3]);
     context.rect(this.state.rX, this.state.rY, this.state.rW, this.state.rH);
     context.stroke();
   };
@@ -91,19 +121,6 @@ class App extends React.Component {
         </button>
         {this.state.rW ? <Metrics {...this.state} /> : null}
       </div>
-    );
-  }
-}
-
-class Metrics extends React.Component {
-  render() {
-    return (
-      <ul className="list-group">
-        <li className="list-group-item">{`X: ${this.props.rX}`}</li>
-        <li className="list-group-item">{`Y: ${this.props.rY}`}</li>
-        <li className="list-group-item">{`W: ${this.props.rW}`}</li>
-        <li className="list-group-item">{`H: ${this.props.rH}`}</li>
-      </ul>
     );
   }
 }
